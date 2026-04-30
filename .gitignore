@@ -1,40 +1,38 @@
-# Pasta do ambiente virtual (não sobe para o Git)
+# Ambiente virtual
 venv/
+.venv/
 
-# Arquivo de credenciais (não sobe para o Git)
+# Variáveis locais / credenciais
 .env
+.env.*
+!.env.example
 
-# Pastas de cache do Python e do Pytest (não sobem)
+# Screenshots gerados automaticamente em falhas Web
+screenshots/*.png
+
+# Caches e artefatos Python/pytest
 __pycache__/
 .pytest_cache/
 .tox/
 .coverage
 htmlcov/
+*.pyc
 
-# ── GSD baseline (auto-generated) ──
-.gsd
-.gsd-id
-.mcp.json
-.bg-shell/
+# Arquivos temporários e logs
 .DS_Store
 Thumbs.db
 *.swp
 *.swo
 *~
+*.log
+tmp/
+.cache/
+coverage/
+
+# IDEs
 .idea/
 .vscode/
 *.code-workspace
-.env.*
-!.env.example
-node_modules/
-.next/
-dist/
-build/
-*.pyc
-.venv/
-target/
-vendor/
-*.log
-coverage/
-.cache/
-tmp/
+.bg-shell/
+.gsd/
+.gsd-id
