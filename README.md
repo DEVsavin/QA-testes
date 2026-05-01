@@ -200,9 +200,11 @@ A API usa `api/petstore_client.py` para centralizar:
 - métodos `GET`, `POST`, `PUT`, `DELETE`;
 - timeout padrão;
 - parsing JSON;
+- logs de request/response com método, endpoint, status e tempo;
+- resumo final no terminal em estilo Postman/Newman com `Executed`, `Passed`, `Failed` e `Failure Detail`;
 - mensagens diagnósticas com método, endpoint, status esperado, status recebido e body.
 
-Isso evita `requests` espalhado pelos testes e deixa as falhas mais claras.
+Isso evita `requests` espalhado pelos testes e deixa a execução e as falhas mais claras.
 
 ### Web
 

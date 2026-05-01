@@ -24,9 +24,11 @@ class CheckoutPage(BasePage):
 
     def continuar(self):
         self.click(self._continue_button)
+        self.wait_url_contains("checkout-step-two.html")
 
     def finalizar(self):
         self.click(self._finish_button)
+        self.wait_url_contains("checkout-complete.html")
 
     def subtotal(self) -> str:
         return self.text_of(self._subtotal)

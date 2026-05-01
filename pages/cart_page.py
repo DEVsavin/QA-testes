@@ -16,9 +16,11 @@ class CartPage(BasePage):
 
     def acessar_carrinho(self):
         self.click(self._cart_icon)
+        self.wait_url_contains("cart.html")
 
     def iniciar_checkout(self):
         self.click(self._checkout_button)
+        self.wait_url_contains("checkout-step-one.html")
 
     def nome_produto_no_carrinho(self) -> str:
         return self.text_of(self._inventory_item_name)

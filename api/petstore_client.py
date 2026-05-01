@@ -1,8 +1,15 @@
 from __future__ import annotations
+
+import logging
 from typing import Any
 from urllib.parse import urljoin
+
 import requests
+
 from config import settings
+
+
+logger = logging.getLogger("petstore")
 
 
 class PetstoreClient:
@@ -14,7 +21,17 @@ class PetstoreClient:
     def request(self, method: str, endpoint: str, **kwargs: Any) -> requests.Response:
         url = self._url(endpoint)
         kwargs.setdefault("timeout", self.timeout)
+
+        logger.info("API request: %s %s", method.upper(), endpoint)
         response = self.session.request(method=method, url=url, **kwargs)
+        logger.info(
+            "API response: %s %s -> %s em %.0fms",
+            method.upper(),
+            endpoint,
+            response.status_code,
+            response.elapsed.total_seconds() * 1000,
+        )
+
         return response
 
     def get(self, endpoint: str, **kwargs: Any) -> requests.Response:
