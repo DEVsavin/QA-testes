@@ -7,7 +7,11 @@ from pages.login_page import LoginPage
 def test_fluxo_compra_completo(driver):
     login_page = LoginPage(driver)
     login_page.acessar()
-    login_page.logar(settings.saucedemo_standard_user, settings.saucedemo_password)
+    login_page.logar(
+        settings.saucedemo_standard_user,
+        settings.saucedemo_password,
+        aguardar_sucesso=True,
+    )
 
     cart_page = CartPage(driver)
     cart_page.adicionar_produto_ao_carrinho()

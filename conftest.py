@@ -4,8 +4,6 @@ import re
 import pytest
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.chrome.service import Service
-from webdriver_manager.chrome import ChromeDriverManager
 
 from config import settings
 
@@ -19,7 +17,9 @@ def _build_chrome_options() -> Options:
 
     # Opções úteis para execução em CI/container sem alterar o fluxo local.
     chrome_options.add_argument("--disable-dev-shm-usage")
+    chrome_options.add_argument("--disable-gpu")
     chrome_options.add_argument("--no-sandbox")
+    chrome_options.add_argument("--remote-debugging-port=0")
 
     return chrome_options
 
@@ -34,8 +34,7 @@ def _safe_screenshot_name(nodeid: str) -> str:
 def driver():
     settings.screenshot_dir.mkdir(parents=True, exist_ok=True)
 
-    service = Service(ChromeDriverManager().install())
-    browser = webdriver.Chrome(service=service, options=_build_chrome_options())
+    browser = webdriver.Chrome(options=_build_chrome_options())
 
     if not settings.saucedemo_headless:
         browser.maximize_window()
