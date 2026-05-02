@@ -1,4 +1,4 @@
-from selenium.common.exceptions import TimeoutException, WebDriverException
+from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
@@ -42,10 +42,7 @@ class BasePage:
 
     def click(self, locator):
         element = self.wait_clickable(locator)
-        self.driver.execute_script(
-            "arguments[0].scrollIntoView({block: 'center', inline: 'center'});",
-            element,
-        )
+        self.driver.execute_script("arguments[0].scrollIntoView(true);", element)
         element.click()
 
     def type_text(self, locator, text: str):
