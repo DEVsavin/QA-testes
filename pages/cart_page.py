@@ -9,7 +9,7 @@ class CartPage(BasePage):
         self._add_to_cart_button = (By.ID, "add-to-cart-sauce-labs-backpack")
         self._cart_icon = (By.CLASS_NAME, "shopping_cart_link")
         self._inventory_item_name = (By.CLASS_NAME, "inventory_item_name")
-        self._checkout_button = (By.ID, "checkout")
+        self._checkout_button = (By.CSS_SELECTOR, '[data-test="checkout"]')
 
     def adicionar_produto_ao_carrinho(self):
         self.click(self._add_to_cart_button)
@@ -19,7 +19,13 @@ class CartPage(BasePage):
         self.wait_url_contains("cart.html")
 
     def iniciar_checkout(self):
-        self.click_and_wait_url_contains(self._checkout_button, "checkout-step-one.html")
+        checkout_button = self.driver.find_element(*self._checkout_button)
+        self.driver.execute_script(
+            "arguments[0].scrollIntoView({block: 'center', inline: 'center'});",
+            checkout_button,
+        )
+        checkout_button.click()
+        self.wait_url_contains("checkout-step-one.html")
 
     def nome_produto_no_carrinho(self) -> str:
         return self.text_of(self._inventory_item_name)
