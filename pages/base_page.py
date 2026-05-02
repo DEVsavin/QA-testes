@@ -2,7 +2,6 @@ from selenium.common.exceptions import TimeoutException, WebDriverException
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
-
 class BasePage:
     def __init__(self, driver, timeout: int = 20):
         self.driver = driver
@@ -29,12 +28,6 @@ class BasePage:
             f"elemento visível {locator}",
         )
 
-    def wait_present(self, locator):
-        return self._wait_until(
-            EC.presence_of_element_located(locator),
-            f"elemento presente {locator}",
-        )
-
     def wait_clickable(self, locator):
         return self._wait_until(
             EC.element_to_be_clickable(locator),
@@ -54,45 +47,6 @@ class BasePage:
             element,
         )
         element.click()
-
-    def click_and_wait_url_contains(self, locator, texto_url: str):
-        element = self.wait_clickable(locator)
-        self.driver.execute_script(
-            "arguments[0].scrollIntoView({block: 'center', inline: 'center'});",
-            element,
-        )
-
-        try:
-            element.click()
-        except WebDriverException:
-            self.driver.execute_script("arguments[0].click();", element)
-
-        try:
-            return self.wait_url_contains(texto_url)
-        except TimeoutException:
-            element = self.wait_clickable(locator)
-            self.driver.execute_script("arguments[0].click();", element)
-
-            try:
-                return self.wait_url_contains(texto_url)
-            except TimeoutException as second_timeout:
-                button_state = self.driver.execute_script(
-                    """
-                    const element = arguments[0];
-                    return {
-                        text: element.innerText,
-                        disabled: element.disabled,
-                        ariaDisabled: element.getAttribute('aria-disabled'),
-                        className: element.className,
-                        href: element.getAttribute('href')
-                    };
-                    """,
-                    element,
-                )
-                raise TimeoutException(
-                    f"Clique em {locator} não navegou para URL contendo "
-                    f"{texto_url!r}. buttonState={button_state!r}"
-                ) from second_timeout
 
     def type_text(self, locator, text: str):
         field = self.wait_visible(locator)
