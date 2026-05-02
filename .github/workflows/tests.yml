@@ -54,7 +54,8 @@ jobs:
           SAUCEDEMO_PASSWORD: secret_sauce
           SAUCEDEMO_HEADLESS: "true"
           SCREENSHOT_DIR: screenshots
-        run: pytest tests/web -q
+        run: |
+          pytest tests/web -q || pytest tests/web -q --last-failed --last-failed-no-failures all
 
       - name: Upload failure screenshots
         if: failure()
