@@ -6,8 +6,11 @@ from pages.base_page import BasePage
 class CartPage(BasePage):
     def __init__(self, driver):
         super().__init__(driver)
-        self._add_to_cart_button = (By.ID, "add-to-cart-sauce-labs-backpack")
-        self._cart_icon = (By.CLASS_NAME, "shopping_cart_link")
+        self._add_to_cart_button = (
+            By.CSS_SELECTOR,
+            '[data-test="add-to-cart-sauce-labs-backpack"]',
+        )
+        self._cart_icon = (By.CSS_SELECTOR, '[data-test="shopping-cart-link"]')
         self._inventory_item_name = (By.CLASS_NAME, "inventory_item_name")
         self._checkout_button = (By.CSS_SELECTOR, '[data-test="checkout"]')
 
@@ -15,7 +18,8 @@ class CartPage(BasePage):
         self.click(self._add_to_cart_button)
 
     def acessar_carrinho(self):
-        self.click(self._cart_icon)
+        cart_icon = self.driver.find_element(*self._cart_icon)
+        self.driver.execute_script("arguments[0].click();", cart_icon)
         self.wait_url_contains("cart.html")
 
     def iniciar_checkout(self):
