@@ -42,8 +42,11 @@ class BasePage:
 
     def click(self, locator):
         element = self.wait_clickable(locator)
-        self.driver.execute_script("arguments[0].scrollIntoView(true);", element)
-        element.click()
+        self.driver.execute_script(
+            "arguments[0].scrollIntoView({block: 'center', inline: 'center'});",
+            element,
+        )
+        self.driver.execute_script("arguments[0].click();", element)
 
     def type_text(self, locator, text: str):
         field = self.wait_visible(locator)
