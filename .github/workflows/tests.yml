@@ -57,12 +57,14 @@ jobs:
           SAUCEDEMO_PASSWORD: secret_sauce
           SAUCEDEMO_HEADLESS: "true"
           SCREENSHOT_DIR: screenshots
-        run: pytest tests/web -q
+        run: pytest tests/web -q --html=report.html --self-contained-html
 
-      - name: Upload failure screenshots
-        if: failure()
+      - name: Upload test report
+        if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: web-test-screenshots
-          path: screenshots/
+          name: web-test-report
+          path: |
+            report.html
+            screenshots/
           if-no-files-found: ignore

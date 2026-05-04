@@ -49,7 +49,8 @@ class BasePage:
         self.driver.execute_script("arguments[0].click();", element)
 
     def type_text(self, locator, text: str):
-        field = self.wait_visible(locator)
+        field = self.wait_clickable(locator)
+        field.click()
         field.clear()
         field.send_keys(text)
 
