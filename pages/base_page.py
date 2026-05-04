@@ -1,4 +1,5 @@
 from selenium.common.exceptions import TimeoutException
+from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
@@ -51,7 +52,7 @@ class BasePage:
     def type_text(self, locator, text: str):
         field = self.wait_clickable(locator)
         field.click()
-        field.clear()
+        field.send_keys(Keys.CONTROL + "a")
         field.send_keys(text)
 
     def text_of(self, locator) -> str:
