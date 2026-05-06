@@ -1,4 +1,4 @@
-# Projeto de Automação de Testes — API Petstore e Web SauceDemo
+# Projeto de Automação de Testes — Petstore API e SauceDemo
 
 ![Python](https://img.shields.io/badge/Python-3.12%2B-3776AB?style=for-the-badge&logo=python&logoColor=white)
 ![pytest](https://img.shields.io/badge/pytest-tests-0A9EDC?style=for-the-badge&logo=pytest&logoColor=white)
@@ -6,43 +6,29 @@
 ![Requests](https://img.shields.io/badge/requests-API%20tests-20232A?style=for-the-badge)
 ![GitHub Actions](https://img.shields.io/badge/GitHub%20Actions-CI-2088FF?style=for-the-badge&logo=githubactions&logoColor=white)
 
-Projeto de automação de testes desenvolvido em Python para demonstrar cobertura funcional em dois contextos comuns de QA: testes de API REST e testes end-to-end em interface web.
+Este projeto reúne dois tipos de automação de testes que aparecem bastante no dia a dia de QA:
 
-A solução valida operações da **Swagger Petstore API** e um fluxo completo de compra no **SauceDemo**, utilizando boas práticas como reutilização de cliente HTTP, Page Object Model, execução headless, evidências em screenshots e pipeline de integração contínua com GitHub Actions.
+- testes de API usando a Swagger Petstore;
+- testes web usando o site SauceDemo.
 
----
+A parte de API segue o guia prático de Postman e GitHub Actions: uma collection do Postman é executada pelo Newman, tanto localmente quanto na pipeline. Também mantive alguns testes em Python como cobertura extra.
 
-## Objetivo do projeto
-
-O objetivo deste projeto é apresentar uma estrutura prática de automação de testes capaz de:
-
-- validar contratos e comportamentos de uma API REST pública;
-- automatizar um fluxo web completo em navegador real;
-- organizar testes de forma legível e reutilizável;
-- gerar evidências em falhas de interface;
-- executar a suíte localmente ou em ambiente de CI.
-
-Este repositório pode ser usado como base de estudo, demonstração técnica ou peça de portfólio para práticas de automação com Python.
+A parte web automatiza um fluxo de compra no SauceDemo com Selenium e Page Object Model, incluindo screenshots quando algum teste falha.
 
 ---
 
-## Tecnologias utilizadas
-
-- **Python 3.12+** — linguagem principal do projeto
-- **pytest** — framework de execução e organização dos testes
-- **requests** — biblioteca para chamadas HTTP nos testes de API
-- **Selenium WebDriver** — automação de navegador para testes web
-- **pytest-html** — geração de relatório HTML da execução
-- **python-dotenv** — leitura opcional de configurações locais
-- **GitHub Actions** — pipeline de integração contínua
-
----
-
-## Escopo dos testes
+## O que este projeto cobre
 
 ### API — Swagger Petstore
 
-A suíte de API cobre os principais domínios da Petstore:
+A automação de API está dividida em dois caminhos.
+
+O caminho principal, usado para seguir o guia, é a collection Postman executada com Newman. Ela faz a request **Listar Pets Disponíveis** e valida duas coisas:
+
+- a API responde com status `200`;
+- o corpo da resposta é uma lista de pets.
+
+Além disso, existem testes Python complementares com `pytest` e `requests`. Eles cobrem mais cenários da Petstore:
 
 #### Pet
 
@@ -68,47 +54,60 @@ A suíte de API cobre os principais domínios da Petstore:
 - remoção de usuário;
 - consulta de usuário inexistente.
 
-Os testes usam identificadores únicos por execução para reduzir colisões de dados na API pública.
+Esses testes usam dados únicos por execução para evitar conflito com dados já existentes na API pública.
 
 ### Web — SauceDemo
 
-A suíte web cobre um fluxo funcional de compra e validações negativas de autenticação:
+A automação web cobre um fluxo de compra completo:
 
-- login com usuário padrão;
+- login com usuário válido;
 - adição do produto **Sauce Labs Backpack** ao carrinho;
 - validação do produto no carrinho;
 - preenchimento do checkout;
-- validação de subtotal, imposto e total;
+- conferência de subtotal, imposto e total;
 - finalização da compra;
-- validação da mensagem final `Thank you for your order!`;
-- login com campos obrigatórios vazios;
-- login com credenciais inválidas;
-- login com usuário bloqueado.
+- validação da mensagem `Thank you for your order!`.
+
+Também há testes negativos de login:
+
+- campos obrigatórios vazios;
+- credenciais inválidas;
+- usuário bloqueado.
+
+---
+
+## Tecnologias usadas
+
+- **Python 3.12+**
+- **pytest** para organizar e executar os testes Python
+- **requests** para chamadas HTTP nos testes Python de API
+- **Postman Collection** para o teste principal de API do guia
+- **Newman** para executar a collection no terminal e no GitHub Actions
+- **Selenium WebDriver** para os testes web
+- **pytest-html** para relatório HTML da execução web
+- **python-dotenv** para configurações por variável de ambiente
+- **GitHub Actions** para integração contínua
 
 ---
 
 ## Estrutura do projeto
 
 ```text
-api/                    Cliente HTTP reutilizável da Petstore
-pages/                  Page Objects e helpers Selenium
-tests/api/              Testes automatizados da API Petstore
-tests/web/              Testes automatizados do SauceDemo
-screenshots/            Evidências automáticas de falhas web
-docs/assets/            Prints usados neste README
-.github/workflows/      Pipeline de CI
+api/                    Cliente HTTP da Petstore usado nos testes Python
+pages/                  Page Objects e helpers dos testes web
+tests/api/              Testes Python da API Petstore
+tests/web/              Testes web do SauceDemo
+screenshots/            Screenshots gerados quando um teste web falha
+docs/assets/            Imagens usadas neste README
+.github/workflows/      Pipeline do GitHub Actions
+petstore_collection.json Collection Postman usada pelo Newman
 ```
 
-A estrutura separa responsabilidades para facilitar manutenção:
-
-- testes de API ficam isolados dos testes web;
-- interações com páginas ficam nos Page Objects;
-- configurações são centralizadas por variáveis de ambiente;
-- screenshots de falha são gerados automaticamente.
+A organização separa API e web para facilitar manutenção. A parte web fica nos Page Objects, enquanto a parte de API concentra as chamadas HTTP em um cliente reutilizável.
 
 ---
 
-## Instalação
+## Como instalar
 
 ### 1. Clonar o repositório
 
@@ -133,20 +132,20 @@ python -m venv venv
 source venv/bin/activate
 ```
 
-### 3. Instalar dependências
+### 3. Instalar as dependências Python
 
 ```bash
 python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
 ```
 
+Para rodar a collection Postman, não precisa instalar Newman manualmente. O comando com `npx` baixa e executa quando necessário.
+
 ---
 
 ## Configuração
 
-A execução local funciona com valores padrão públicos já configurados no projeto. Caso seja necessário sobrescrever algum valor, o projeto aceita variáveis de ambiente.
-
-Variáveis disponíveis:
+O projeto já funciona com valores públicos padrão. Se precisar trocar alguma configuração, use variáveis de ambiente.
 
 ```env
 PETSTORE_BASE_URL=https://petstore.swagger.io/v2
@@ -158,40 +157,47 @@ SAUCEDEMO_HEADLESS=false
 SCREENSHOT_DIR=screenshots
 ```
 
-Para execução sem abrir a janela do navegador, use:
+Para rodar os testes web sem abrir o navegador, use:
 
 ```env
 SAUCEDEMO_HEADLESS=true
 ```
 
-O arquivo `env.example` contém um exemplo completo das variáveis suportadas.
+O arquivo `env.example` mostra todas as variáveis disponíveis.
 
 ---
 
-## Execução dos testes
+## Como rodar os testes
 
-### Executar suíte completa
+### API principal — Postman/Newman
 
-No Windows PowerShell:
-
-```powershell
-$env:SAUCEDEMO_HEADLESS="true"
-pytest -q
-```
-
-No Linux, macOS ou Git Bash:
+Este é o comando principal para seguir o guia prático:
 
 ```bash
-SAUCEDEMO_HEADLESS=true pytest -q
+npx newman run petstore_collection.json --reporters cli
 ```
 
-### Executar somente testes de API
+Resultado esperado:
+
+```text
+requests: executed 1, failed 0
+assertions: executed 2, failed 0
+```
+
+As duas validações esperadas são:
+
+- `Status code é 200`;
+- `A resposta deve ser uma lista de pets`.
+
+### API complementar — pytest
+
+Estes testes são uma cobertura extra em Python:
 
 ```bash
 pytest tests/api -q
 ```
 
-### Executar somente testes Web
+### Testes web
 
 No Windows PowerShell:
 
@@ -206,19 +212,25 @@ No Linux, macOS ou Git Bash:
 SAUCEDEMO_HEADLESS=true pytest tests/web -q
 ```
 
-### Gerar relatório HTML
+### Suíte Python completa
+
+```bash
+SAUCEDEMO_HEADLESS=true pytest -q
+```
+
+### Relatório HTML dos testes web
 
 ```bash
 SAUCEDEMO_HEADLESS=true pytest tests/web -q --html=report.html --self-contained-html
 ```
 
-O relatório será gerado como `report.html`.
+O relatório será gerado em `report.html`.
 
 ---
 
-## Evidências visuais do fluxo web
+## Evidências do fluxo web
 
-Os prints abaixo foram capturados durante a execução real do fluxo automatizado no SauceDemo.
+Os prints abaixo mostram o fluxo automatizado no SauceDemo.
 
 ### 1. Tela de login
 
@@ -242,9 +254,9 @@ Os prints abaixo foram capturados durante a execução real do fluxo automatizad
 
 ---
 
-## Evidências automáticas em falhas
+## Screenshots em caso de falha
 
-Quando um teste web falha, o projeto salva automaticamente um screenshot da tela no momento da falha.
+Quando um teste web falha, o projeto salva um screenshot da tela no momento do erro.
 
 Diretório padrão:
 
@@ -252,96 +264,78 @@ Diretório padrão:
 screenshots/
 ```
 
-Os arquivos `.png` dessa pasta são ignorados pelo git para evitar versionar evidências temporárias de execução. A pasta permanece no repositório com `.gitkeep`.
-
-Essa estratégia ajuda na análise de falhas em execuções locais e em pipeline CI.
+Os arquivos `.png` dessa pasta não são versionados. A pasta fica no repositório com `.gitkeep` apenas para manter a estrutura.
 
 ---
 
-## Integração contínua
+## GitHub Actions
 
-O projeto possui pipeline configurado com GitHub Actions.
-
-A execução acontece em:
+A pipeline roda em:
 
 - `push`;
 - `pull_request`;
-- execução manual via `workflow_dispatch`.
+- execução manual com `workflow_dispatch`.
 
-A pipeline possui dois jobs principais:
+Ela tem dois jobs separados.
 
-### API tests
+### Testes Automatizados Postman
 
-- instala as dependências;
-- configura a URL base da Petstore;
-- executa `pytest tests/api -q`.
+Este job executa a API conforme o guia:
+
+- baixa os arquivos do repositório;
+- instala Node.js;
+- instala Newman;
+- executa `petstore_collection.json`;
+- valida as duas assertions da collection.
 
 ### Web tests
 
-- instala as dependências;
+Este job roda os testes web:
+
+- instala as dependências Python;
 - configura o Chrome;
-- executa os testes web em modo headless;
+- executa os testes em modo headless;
 - gera relatório HTML;
-- publica relatório e screenshots como artifact da execução.
+- publica relatório e screenshots como artifact.
 
 ---
 
 ## Estratégia técnica
 
-### Testes de API
+Na API, o foco principal é mostrar a execução de uma collection Postman com Newman, como no guia. Os testes Python entram como complemento para mostrar uma abordagem mais programática usando `pytest` e `requests`.
 
-Os testes de API utilizam um cliente HTTP reutilizável para centralizar:
+Nos testes Python de API, o cliente HTTP centraliza:
 
 - URL base;
 - métodos `GET`, `POST`, `PUT` e `DELETE`;
 - timeout padrão;
-- conversão de resposta para JSON;
+- leitura de JSON;
 - logs de request e response;
-- mensagens diagnósticas com método, endpoint, status esperado, status recebido e body da resposta.
+- mensagens de erro com método, endpoint, status esperado, status recebido e body da resposta.
 
-Essa abordagem reduz repetição, melhora a legibilidade dos testes e facilita investigação de falhas.
-
-### Testes Web
-
-Os testes web seguem o padrão **Page Object Model**.
-
-Com essa abordagem:
-
-- seletores ficam encapsulados nas classes de página;
-- ações comuns ficam centralizadas;
-- esperas explícitas reduzem instabilidade;
-- os testes descrevem o comportamento esperado em alto nível.
-
-Isso torna a suíte mais fácil de manter quando a interface muda.
+Na web, os testes seguem Page Object Model. Isso deixa os seletores e ações dentro das classes de página, evitando que os testes fiquem cheios de detalhes da interface.
 
 ---
 
 ## Resultado esperado
 
-Uma execução completa bem-sucedida deve finalizar com todos os testes passando.
-
-Exemplo de comando:
-
-```bash
-SAUCEDEMO_HEADLESS=true pytest -q
-```
-
-Exemplo de resultado atual:
+Para a API principal com Newman, o esperado é:
 
 ```text
-14 passed
+1 request executada
+2 assertions passando
+0 falhas
 ```
 
-A quantidade de testes pode mudar conforme novos cenários forem adicionados.
+Para os testes Python, a quantidade de testes pode mudar conforme novos cenários forem adicionados.
 
 ---
 
 ## Pontos de destaque
 
-- Cobertura combinando API REST e Web UI.
-- Separação entre testes, clientes e Page Objects.
-- Configuração por variáveis de ambiente.
+- API principal alinhada ao guia de Postman e GitHub Actions.
+- Testes Python de API como cobertura complementar.
+- Testes web separados da API.
+- Page Object Model nos testes web.
 - Screenshots automáticos em falhas web.
-- Execução headless para CI.
-- Pipeline com relatório HTML e artifacts.
-- Mensagens de erro com contexto para facilitar análise.
+- Pipeline com jobs separados para API e web.

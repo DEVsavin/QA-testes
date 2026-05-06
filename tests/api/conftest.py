@@ -25,7 +25,7 @@ def pytest_terminal_summary(terminalreporter, exitstatus, config):
     failed = sum(1 for result in _api_results if result.failed)
     skipped = sum(1 for result in _api_results if result.skipped)
 
-    terminalreporter.write_sep("=", "RELATORIO API - estilo Postman/Newman")
+    terminalreporter.write_sep("=", "RELATORIO API")
     terminalreporter.write_line("+----------------+-------+")
     terminalreporter.write_line("| Metrica        | Total |")
     terminalreporter.write_line("+----------------+-------+")

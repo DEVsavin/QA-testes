@@ -7,26 +7,23 @@ on:
 
 jobs:
   api-tests:
-    name: API tests
+    name: Testes Automatizados Postman
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Baixando os arquivos do repositório
         uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - name: Instalando o Node.js
+        uses: actions/setup-node@v4
         with:
-          python-version: "3.12"
-          cache: "pip"
+          node-version: "20"
 
-      - name: Install dependencies
-        run: python -m pip install -r requirements.txt
+      - name: Instalando o Newman
+        run: npm install -g newman
 
-      - name: Run API tests
-        env:
-          PETSTORE_BASE_URL: https://petstore.swagger.io/v2
-        run: pytest tests/api -q
+      - name: Rodando os Testes da Petstore
+        run: newman run petstore_collection.json --reporters cli
 
   web-tests:
     name: Web tests

@@ -1,0 +1,58 @@
+{
+  "info": {
+    "name": "Aula-Automacao-Petstore",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Collection criada conforme o guia prático: valida a listagem de pets disponíveis na Swagger Petstore."
+  },
+  "item": [
+    {
+      "name": "Listar Pets Disponíveis",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "// Teste 1: Verificar se o status da resposta é 200 (OK)",
+              "pm.test(\"Status code é 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "// Teste 2: Verificar se a resposta é uma lista (Array)",
+              "pm.test(\"A resposta deve ser uma lista de pets\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData).to.be.an('array');",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://petstore.swagger.io/v2/pet/findByStatus?status=available",
+          "protocol": "https",
+          "host": [
+            "petstore",
+            "swagger",
+            "io"
+          ],
+          "path": [
+            "v2",
+            "pet",
+            "findByStatus"
+          ],
+          "query": [
+            {
+              "key": "status",
+              "value": "available"
+            }
+          ]
+        },
+        "description": "GET https://petstore.swagger.io/v2/pet/findByStatus?status=available"
+      },
+      "response": []
+    }
+  ]
+}
