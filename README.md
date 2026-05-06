@@ -1,152 +1,161 @@
-# Projeto de Automação de Testes — Petstore API e SauceDemo
-
+# Automação de Testes — Petstore API & SauceDemo
+ 
 ![Python](https://img.shields.io/badge/Python-3.12%2B-3776AB?style=for-the-badge&logo=python&logoColor=white)
-![pytest](https://img.shields.io/badge/pytest-tests-0A9EDC?style=for-the-badge&logo=pytest&logoColor=white)
+![pytest](https://img.shields.io/badge/pytest-testes-0A9EDC?style=for-the-badge&logo=pytest&logoColor=white)
 ![Selenium](https://img.shields.io/badge/Selenium-WebDriver-43B02A?style=for-the-badge&logo=selenium&logoColor=white)
 ![Requests](https://img.shields.io/badge/requests-API%20tests-20232A?style=for-the-badge)
 ![GitHub Actions](https://img.shields.io/badge/GitHub%20Actions-CI-2088FF?style=for-the-badge&logo=githubactions&logoColor=white)
-
-Este projeto reúne dois tipos de automação de testes que aparecem bastante no dia a dia de QA:
-
-- testes de API usando a Swagger Petstore;
-- testes web usando o site SauceDemo.
-
-A parte de API segue o guia prático de Postman e GitHub Actions: uma collection do Postman é executada pelo Newman, tanto localmente quanto na pipeline. Também mantive alguns testes em Python como cobertura extra.
-
-A parte web automatiza um fluxo de compra no SauceDemo com Selenium e Page Object Model, incluindo screenshots quando algum teste falha.
-
+ 
+Projeto de automação de testes cobrindo dois cenários comuns no dia a dia de QA:
+ 
+- **Testes de API** usando a [Swagger Petstore](https://petstore.swagger.io/)
+- **Testes Web** usando o [SauceDemo](https://www.saucedemo.com/)
+O caminho principal de API segue o guia de Postman e GitHub Actions — uma collection é executada via Newman, localmente e na pipeline. Testes complementares em Python cobrem mais cenários com `pytest` e `requests`. Os testes web automatizam um fluxo completo de compra com Selenium e Page Object Model.
+ 
 ---
-
-## O que este projeto cobre
-
+ 
+## Índice
+ 
+- [O que é testado](#o-que-é-testado)
+- [Tecnologias](#tecnologias)
+- [Estrutura do projeto](#estrutura-do-projeto)
+- [Instalação](#instalação)
+- [Configuração](#configuração)
+- [Como rodar](#como-rodar)
+- [Evidências do fluxo web](#evidências-do-fluxo-web)
+- [GitHub Actions](#github-actions)
+---
+ 
+## O que é testado
+ 
 ### API — Swagger Petstore
-
-A automação de API está dividida em dois caminhos.
-
-O caminho principal, usado para seguir o guia, é a collection Postman executada com Newman. Ela faz a request **Listar Pets Disponíveis** e valida duas coisas:
-
-- a API responde com status `200`;
-- o corpo da resposta é uma lista de pets.
-
-Além disso, existem testes Python complementares com `pytest` e `requests`. Eles cobrem mais cenários da Petstore:
-
-#### Pet
-
-- criação de pet;
-- atualização de pet;
-- consulta de pet por ID;
-- remoção de pet;
-- consulta de pet inexistente;
-- listagem de pets por status.
-
-#### Store
-
-- criação de pedido;
-- consulta de pedido por ID;
-- remoção de pedido;
-- consulta de pedido inexistente;
-- consulta do inventário da loja.
-
-#### User
-
-- criação de usuário;
-- consulta de usuário;
-- remoção de usuário;
-- consulta de usuário inexistente.
-
-Esses testes usam dados únicos por execução para evitar conflito com dados já existentes na API pública.
-
+ 
+O caminho principal usa a collection Postman executada com Newman. Ela faz a requisição **Listar Pets Disponíveis** e valida:
+ 
+- resposta com status `200`
+- corpo da resposta é uma lista de pets
+Os testes Python complementares cobrem os três recursos da API:
+ 
+**Pet**
+- Criar, atualizar, consultar e remover pet
+- Consultar pet inexistente (espera `404`)
+- Listar pets por status
+**Store**
+- Criar, consultar e remover pedido
+- Consultar pedido inexistente (espera `404`)
+- Consultar inventário da loja
+**User**
+- Criar, consultar e remover usuário
+- Consultar usuário inexistente (espera `404`)
+> Os dados são gerados de forma única a cada execução para evitar conflito com a API pública.
+ 
+---
+ 
 ### Web — SauceDemo
-
-A automação web cobre um fluxo de compra completo:
-
-- login com usuário válido;
-- adição do produto **Sauce Labs Backpack** ao carrinho;
-- validação do produto no carrinho;
-- preenchimento do checkout;
-- conferência de subtotal, imposto e total;
-- finalização da compra;
-- validação da mensagem `Thank you for your order!`.
-
-Também há testes negativos de login:
-
-- campos obrigatórios vazios;
-- credenciais inválidas;
-- usuário bloqueado.
-
+ 
+**Fluxo de compra completo**
+ 
+1. Login com usuário válido
+2. Adicionar o produto **Sauce Labs Backpack** ao carrinho
+3. Validar produto no carrinho
+4. Preencher formulário de checkout
+5. Conferir subtotal, imposto e total
+6. Finalizar a compra
+7. Validar mensagem `Thank you for your order!`
+**Testes negativos de login**
+ 
+- Campos obrigatórios vazios
+- Credenciais inválidas
+- Usuário bloqueado
+> Quando um teste web falha, um screenshot da tela é salvo automaticamente em `screenshots/`.
+ 
 ---
-
-## Tecnologias usadas
-
-- **Python 3.12+**
-- **pytest** para organizar e executar os testes Python
-- **requests** para chamadas HTTP nos testes Python de API
-- **Postman Collection** para o teste principal de API do guia
-- **Newman** para executar a collection no terminal e no GitHub Actions
-- **Selenium WebDriver** para os testes web
-- **pytest-html** para relatório HTML da execução web
-- **python-dotenv** para configurações por variável de ambiente
-- **GitHub Actions** para integração contínua
-
+ 
+## Tecnologias
+ 
+| Ferramenta | Uso |
+|---|---|
+| Python 3.12+ | Linguagem principal |
+| pytest | Organização e execução dos testes |
+| requests | Chamadas HTTP nos testes de API |
+| Postman / Newman | Collection e execução da API principal |
+| Selenium WebDriver | Automação dos testes web |
+| pytest-html | Relatório HTML da execução web |
+| python-dotenv | Variáveis de ambiente |
+| GitHub Actions | Integração contínua |
+ 
 ---
-
+ 
 ## Estrutura do projeto
-
-```text
-api/                    Cliente HTTP da Petstore usado nos testes Python
-pages/                  Page Objects e helpers dos testes web
-tests/api/              Testes Python da API Petstore
-tests/web/              Testes web do SauceDemo
-screenshots/            Screenshots gerados quando um teste web falha
-docs/assets/            Imagens usadas neste README
-.github/workflows/      Pipeline do GitHub Actions
-petstore_collection.json Collection Postman usada pelo Newman
+ 
 ```
-
-A organização separa API e web para facilitar manutenção. A parte web fica nos Page Objects, enquanto a parte de API concentra as chamadas HTTP em um cliente reutilizável.
-
+api/                        Cliente HTTP da Petstore (testes Python)
+pages/                      Page Objects dos testes web
+│   ├── base_page.py
+│   ├── login_page.py
+│   ├── cart_page.py
+│   └── checkout_page.py
+tests/
+│   ├── api/
+│   │   ├── test_pet.py
+│   │   ├── test_store.py
+│   │   ├── test_user.py
+│   │   ├── test_api_support.py
+│   │   └── helpers.py
+│   └── web/
+│       ├── test_compra.py
+│       └── test_login_negativo.py
+screenshots/                Screenshots automáticos em falhas web
+docs/assets/                Prints do fluxo web (para o README)
+.github/workflows/          Pipeline do GitHub Actions
+petstore_collection.json    Collection Postman usada pelo Newman
+config.py                   Configurações do projeto
+conftest.py                 Fixtures do pytest
+requirements.txt            Dependências Python
+pytest.ini                  Configurações do pytest
+env.example                 Variáveis de ambiente disponíveis
+```
+ 
 ---
-
-## Como instalar
-
+ 
+## Instalação
+ 
 ### 1. Clonar o repositório
-
+ 
 ```bash
-git clone <url-do-repositorio>
-cd PRojeto-automacao
+git clone https://github.com/DEVsavin/QA-testes.git
+cd QA-testes
 ```
-
+ 
 ### 2. Criar ambiente virtual
-
-No Windows PowerShell:
-
+ 
+**Windows (PowerShell):**
 ```powershell
 python -m venv venv
 .\venv\Scripts\Activate.ps1
 ```
-
-No Linux, macOS ou Git Bash:
-
+ 
+**Linux / macOS / Git Bash:**
 ```bash
 python -m venv venv
 source venv/bin/activate
 ```
-
-### 3. Instalar as dependências Python
-
+ 
+### 3. Instalar dependências
+ 
 ```bash
-python -m pip install --upgrade pip
-python -m pip install -r requirements.txt
+pip install --upgrade pip
+pip install -r requirements.txt
 ```
-
-Para rodar a collection Postman, não precisa instalar Newman manualmente. O comando com `npx` baixa e executa quando necessário.
-
+ 
+> Para rodar a collection Postman não é necessário instalar o Newman manualmente. O `npx` baixa e executa automaticamente.
+ 
 ---
-
+ 
 ## Configuração
-
-O projeto já funciona com valores públicos padrão. Se precisar trocar alguma configuração, use variáveis de ambiente.
-
+ 
+O projeto funciona com os valores padrão das APIs públicas. Se precisar ajustar algo, crie um arquivo `.env` na raiz do projeto baseado no `env.example`:
+ 
 ```env
 PETSTORE_BASE_URL=https://petstore.swagger.io/v2
 SAUCEDEMO_BASE_URL=https://www.saucedemo.com/
@@ -156,186 +165,118 @@ SAUCEDEMO_PASSWORD=secret_sauce
 SAUCEDEMO_HEADLESS=false
 SCREENSHOT_DIR=screenshots
 ```
-
-Para rodar os testes web sem abrir o navegador, use:
-
+ 
+Para rodar os testes web sem abrir o navegador, defina:
+ 
 ```env
 SAUCEDEMO_HEADLESS=true
 ```
-
-O arquivo `env.example` mostra todas as variáveis disponíveis.
-
+ 
 ---
-
-## Como rodar os testes
-
+ 
+## Como rodar
+ 
 ### API principal — Postman/Newman
-
-Este é o comando principal para seguir o guia prático:
-
+ 
 ```bash
 npx newman run petstore_collection.json --reporters cli
 ```
-
+ 
 Resultado esperado:
-
-```text
+```
 requests: executed 1, failed 0
 assertions: executed 2, failed 0
 ```
-
-As duas validações esperadas são:
-
-- `Status code é 200`;
-- `A resposta deve ser uma lista de pets`.
-
-### API complementar — pytest
-
-Estes testes são uma cobertura extra em Python:
-
+ 
+As duas validações da collection são:
+- `Status code é 200`
+- `A resposta deve ser uma lista de pets`
+---
+ 
+### Testes de API — pytest
+ 
 ```bash
-pytest tests/api -q
+pytest tests/api -v
 ```
-
+ 
+---
+ 
 ### Testes web
-
-No Windows PowerShell:
-
+ 
+**Windows (PowerShell):**
 ```powershell
 $env:SAUCEDEMO_HEADLESS="true"
-pytest tests/web -q
+pytest tests/web -v
 ```
-
-No Linux, macOS ou Git Bash:
-
+ 
+**Linux / macOS / Git Bash:**
 ```bash
-SAUCEDEMO_HEADLESS=true pytest tests/web -q
+SAUCEDEMO_HEADLESS=true pytest tests/web -v
 ```
-
-### Suíte Python completa
-
+ 
+---
+ 
+### Suite completa (API + Web)
+ 
 ```bash
-SAUCEDEMO_HEADLESS=true pytest -q
+SAUCEDEMO_HEADLESS=true pytest -v
 ```
-
-### Relatório HTML dos testes web
-
+ 
+---
+ 
+### Relatório HTML
+ 
 ```bash
-SAUCEDEMO_HEADLESS=true pytest tests/web -q --html=report.html --self-contained-html
+SAUCEDEMO_HEADLESS=true pytest tests/web -v --html=report.html --self-contained-html
 ```
-
+ 
 O relatório será gerado em `report.html`.
-
+ 
 ---
-
+ 
 ## Evidências do fluxo web
-
-Os prints abaixo mostram o fluxo automatizado no SauceDemo.
-
+ 
 ### 1. Tela de login
-
+ 
 ![Tela de login do SauceDemo](docs/assets/saucedemo-login.png)
-
+ 
 ### 2. Lista de produtos após login
-
+ 
 ![Lista de produtos do SauceDemo](docs/assets/saucedemo-produtos.png)
-
+ 
 ### 3. Produto adicionado ao carrinho
-
+ 
 ![Carrinho com produto adicionado](docs/assets/saucedemo-carrinho.png)
-
+ 
 ### 4. Revisão do checkout
-
+ 
 ![Revisão do checkout](docs/assets/saucedemo-checkout.png)
-
+ 
 ### 5. Compra finalizada
-
+ 
 ![Confirmação da compra finalizada](docs/assets/saucedemo-confirmacao.png)
-
+ 
 ---
-
-## Screenshots em caso de falha
-
-Quando um teste web falha, o projeto salva um screenshot da tela no momento do erro.
-
-Diretório padrão:
-
-```text
-screenshots/
-```
-
-Os arquivos `.png` dessa pasta não são versionados. A pasta fica no repositório com `.gitkeep` apenas para manter a estrutura.
-
----
-
+ 
 ## GitHub Actions
-
-A pipeline roda em:
-
-- `push`;
-- `pull_request`;
-- execução manual com `workflow_dispatch`.
-
-Ela tem dois jobs separados.
-
-### Testes Automatizados Postman
-
-Este job executa a API conforme o guia:
-
-- baixa os arquivos do repositório;
-- instala Node.js;
-- instala Newman;
-- executa `petstore_collection.json`;
-- valida as duas assertions da collection.
-
-### Web tests
-
-Este job roda os testes web:
-
-- instala as dependências Python;
-- configura o Chrome;
-- executa os testes em modo headless;
-- gera relatório HTML;
-- publica relatório e screenshots como artifact.
-
+ 
+A pipeline roda automaticamente em `push`, `pull_request` e execução manual via `workflow_dispatch`.
+ 
+Ela tem **dois jobs independentes**:
+ 
+**Job 1 — Testes de API (Postman/Newman)**
+- Instala Node.js
+- Instala Newman
+- Executa `petstore_collection.json`
+- Valida as duas assertions da collection
+**Job 2 — Testes Web**
+- Instala dependências Python
+- Configura o Chrome em modo headless
+- Executa os testes web com pytest
+- Gera relatório HTML
+- Publica relatório e screenshots como artifact do workflow
 ---
-
-## Estratégia técnica
-
-Na API, o foco principal é mostrar a execução de uma collection Postman com Newman, como no guia. Os testes Python entram como complemento para mostrar uma abordagem mais programática usando `pytest` e `requests`.
-
-Nos testes Python de API, o cliente HTTP centraliza:
-
-- URL base;
-- métodos `GET`, `POST`, `PUT` e `DELETE`;
-- timeout padrão;
-- leitura de JSON;
-- logs de request e response;
-- mensagens de erro com método, endpoint, status esperado, status recebido e body da resposta.
-
-Na web, os testes seguem Page Object Model. Isso deixa os seletores e ações dentro das classes de página, evitando que os testes fiquem cheios de detalhes da interface.
-
----
-
-## Resultado esperado
-
-Para a API principal com Newman, o esperado é:
-
-```text
-1 request executada
-2 assertions passando
-0 falhas
-```
-
-Para os testes Python, a quantidade de testes pode mudar conforme novos cenários forem adicionados.
-
----
-
-## Pontos de destaque
-
-- API principal alinhada ao guia de Postman e GitHub Actions.
-- Testes Python de API como cobertura complementar.
-- Testes web separados da API.
-- Page Object Model nos testes web.
-- Screenshots automáticos em falhas web.
-- Pipeline com jobs separados para API e web.
+ 
+## Screenshots em falha
+ 
+Quando um teste web falha, o projeto salva automaticamente um screenshot da tela no diretório `screenshots/`. Os arquivos `.png` não são versionados — a pasta existe no repositório com um `.gitkeep` apenas para manter a estrutura.
